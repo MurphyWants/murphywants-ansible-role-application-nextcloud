@@ -1,1 +1,19 @@
-# variable: True
+---
+NEXTCLOUD_PUID: 10003
+NEXTCLOUD_GUID: 10003
+NEXTCLOUD_PATH: "/mnt/nextcloud"
+NEXTCLOUD_STORAGE_ZFS_POOL: 'apps_pool'
+NEXTCLOUD_STORAGE_ZFS_FS: 'nextcloud'
+NEXTCLOUD_TIMEZONE: "America/New_York"
+NEXTCLOUD_CONTAINER_VERSION: 'latest'
+NEXTCLOUD_POSTGRES_CONTAINER_VERSION: '15'
+NEXTCLOUD_HTTPS_PORT: 8084
+NEXTCLOUD_FQDN: nextcloud.local
+NEXTCLOUD_POSTGRES_ENV_POSTGRES_PASSWORD: "ChangeThisPassword" # https://hub.docker.com/_/postgres Mandatory env var POSTGRES_PASSWORD
+NEXTCLOUD_POSTGRES_ENV_POSTGRES_USER: "postgresUser"
+NEXTCLOUD_POSTGRES_ENV_POSTGRES_DB: "postgresDatabase"
+NEXTCLOUD_SSL_CERT_PATH: undefined
+NEXTCLOUD_SSL_KEY_PATH: undefined
+NEXTCLOUD_NETWORK_CIDR: "10.254.0.1/24"
+# Probably change this and use an ansible vault
+# https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html

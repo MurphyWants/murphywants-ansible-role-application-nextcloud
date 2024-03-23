@@ -1,0 +1,32 @@
+server {
+    listen       80;
+    listen       [::]:80;
+    server_name nextcloud {{ NEXTCLOUD_FQDN }};
+  
+    access_log /var/log/nginx/nextcloud.80.{{ NEXTCLOUD_FQDN }}.access.log;
+    error_log /var/log/nginx/nextcloud.80.{{ NEXTCLOUD_FQDN }}.error.log;
+  
+    return 301 https://{{ NEXTCLOUD_FQDN }}$request_uri;
+  
+  }
+  
+  server {
+    listen       443;
+    listen       [::]:443;
+    server_name {{ NEXTCLOUD_FQDN }};
+    ssl on;
+    ssl_certificate {{ NEXTCLOUD_SSL_CERT_PATH }};
+    ssl_certificate_key {{ NEXTCLOUD_SSL_KEY_PATH }};
+  
+    access_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.access.log;
+    error_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.error.log;
+  
+    location / {
+      proxy_pass "http://localhost:{{ NEXTCLOUD_HTTPS_PORT }}";
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+  
+  }

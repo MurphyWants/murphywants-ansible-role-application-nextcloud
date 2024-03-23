@@ -1,0 +1,32 @@
+---
+  - name: Install nginx
+    ansible.builtin.package:
+      name: nginx
+      
+  - name: Start nginx
+    ansible.builtin.systemd_service:
+      state: started
+      enabled: true
+      name: nginx.service
+
+  - name: Setup dehydrated
+    include_role: 
+      name: murphywants-ansible-role-component-dehydrated
+    vars:
+      DEHYDRATED_DOMAINS_LIST:
+        - "{{ NEXTCLOUD_FQDN }}"
+
+  - name: Open nginx port in UFW
+    community.general.ufw:
+      rule: allow
+      name: 'Nginx Full'
+  
+  - name: Copy nginx config
+    ansible.builtin.template:
+      src: "{{ role_path }}/templates/nextcloud_nginx.conf.j2"
+      dest: /etc/nginx/conf.d/nextcloud_nginx.conf
+
+  - name: Restart nginx
+    ansible.builtin.systemd_service:
+      name: nginx
+      state: restarted

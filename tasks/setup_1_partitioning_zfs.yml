@@ -1,0 +1,34 @@
+---
+  - name: Create nextcloud ZFS volume
+    community.general.zfs:
+      name: "{{ NEXTCLOUD_STORAGE_ZFS_POOL }}/{{ NEXTCLOUD_STORAGE_ZFS_FS }}"
+      state: present
+      extra_zfs_properties:
+        mountpoint: "{{ NEXTCLOUD_PATH }}"
+
+  - name: Create folders
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+    loop:
+      - "{{ NEXTCLOUD_PATH }}"
+      - "{{ NEXTCLOUD_PATH }}/volumes"
+      - "{{ NEXTCLOUD_PATH }}/volumes/nextcloud-data"
+      - "{{ NEXTCLOUD_PATH }}/volumes/nextcloud-config"
+      - "{{ NEXTCLOUD_PATH }}/volumes/postgresql-data"
+      - "{{ NEXTCLOUD_PATH }}/volumes/postgresql-docker-entrypoint-initdb.d"
+      - "{{ NEXTCLOUD_PATH }}/backups"
+      - "{{ NEXTCLOUD_PATH }}/backups/logs"
+      - "{{ NEXTCLOUD_PATH }}/scripts"
+      - "{{ NEXTCLOUD_PATH }}/docs"
+
+  - name: Copy docker compose file
+    ansible.builtin.template:
+      src: "{{ role_path }}/templates/nextcloud_docker-compose.yml.j2"
+      dest: "{{ NEXTCLOUD_PATH }}/docs/docker-compose.yml"
+
+  - name: Copy postgresql init config script
+    ansible.builtin.template:
+      src: "{{ role_path }}/templates/nextcloud_postgresql.sql.j2"
+      dest: "{{ NEXTCLOUD_PATH }}/volumes/postgresql-docker-entrypoint-initdb.d/nextcloud_postgresql.sql"
+

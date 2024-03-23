@@ -1,0 +1,9 @@
+---
+- name: Stop apps
+  ansible.builtin.import_tasks:
+    file: tag_stop.yml
+
+- name: Docker Setup & Baseline
+  include_role: 
+    name: murphywants-ansible-role-component-docker
+  tags: setup

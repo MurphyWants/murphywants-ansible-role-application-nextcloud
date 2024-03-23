@@ -1,2 +1,12 @@
 ---
-# TODO
+  - name: Check if docker-compose file exists
+    ansible.builtin.stat:
+      path: "{{ NEXTCLOUD_PATH }}/docs/docker-compose.yml"
+    register: nextcloud_stat_docker_compose_file
+
+  - name: Docker Compose Stop Running Apps
+    community.docker.docker_compose:
+      project_src: "{{ NEXTCLOUD_PATH }}/docs"
+      files: "docker-compose.yml"
+      state: absent
+    when: nextcloud_stat_docker_compose_file.stat.exists
