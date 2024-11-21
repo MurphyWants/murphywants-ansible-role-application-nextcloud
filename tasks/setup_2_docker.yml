@@ -4,7 +4,3 @@
     ansible.builtin.import_tasks:
       file: tag_start.yml
 
-  # Stop the app, so we can configure it
-  - name: Stop the app, if running
-    ansible.builtin.import_tasks:
-      file: tag_stop.yml

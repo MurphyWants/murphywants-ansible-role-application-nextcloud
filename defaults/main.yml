@@ -17,3 +17,6 @@ NEXTCLOUD_SSL_KEY_PATH: undefined
 NEXTCLOUD_NETWORK_CIDR: "10.254.0.1/24"
 # Probably change this and use an ansible vault
 # https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html
+NEXTCLOUD_MAINTENENCE_WINDOW_START: '1'
+# https://docs.nextcloud.com/server/30/admin_manual/configuration_server/background_jobs_configuration.html#:~:text=Parameters-,%EF%83%81,-maintenance_window_start
+# Defines the maintenance window start. A value of 1 means 1 am and extends out +4 hours.

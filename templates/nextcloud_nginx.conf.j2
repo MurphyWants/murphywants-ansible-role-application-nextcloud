@@ -1,3 +1,11 @@
+#influenced by https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md
+
+# https://nginx.org/en/docs/http/websocket.html
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
 server {
     listen       80;
     listen       [::]:80;
@@ -11,12 +19,13 @@ server {
   }
   
   server {
-    listen       443;
-    listen       [::]:443;
+    listen       443 ssl http2;
+    listen       [::]:443 ssl http2;
     server_name {{ NEXTCLOUD_FQDN }};
-    ssl on;
+    #ssl on; # Deprecated
     ssl_certificate {{ NEXTCLOUD_SSL_CERT_PATH }};
     ssl_certificate_key {{ NEXTCLOUD_SSL_KEY_PATH }};
+    
   
     access_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.access.log;
     error_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.error.log;

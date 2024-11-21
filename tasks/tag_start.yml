@@ -10,6 +10,6 @@
       files: "docker-compose.yml"
       state: present
       pull: true
-      project_name: freshrss
+      project_name: nextcloud
     when: nextcloud_stat_docker_compose_file.stat.exists
 

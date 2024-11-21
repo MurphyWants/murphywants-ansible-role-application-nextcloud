@@ -8,5 +8,6 @@
     community.docker.docker_compose:
       project_src: "{{ NEXTCLOUD_PATH }}/docs"
       files: "docker-compose.yml"
+      project_name: nextcloud
       state: absent
     when: nextcloud_stat_docker_compose_file.stat.exists

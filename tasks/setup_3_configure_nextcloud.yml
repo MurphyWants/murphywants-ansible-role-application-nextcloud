@@ -1,1 +1,27 @@
-# TODO
+---
+- name: Wait for nextcloud to start
+  ansible.builtin.uri:
+    url: "https://{{ NEXTCLOUD_FQDN }}"
+    method: GET
+    follow_redirects: none
+    status_code: [200,302]
+    validate_certs: false
+  register: http_result
+  until: http_result.status == 302
+  retries: 720 # 1 hour
+  delay: 5 # seconds
+
+- name: Set nextcloud maintenance window
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ config:system:set maintenance_window_start --type=integer --value={{ NEXTCLOUD_MAINTENENCE_WINDOW_START }}"
+
+- name: Mimetype migrations
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ maintenance:repair --include-expensive"
+
+- name: Created missing indices
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ db:add-missing-indices"
