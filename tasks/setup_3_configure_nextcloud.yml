@@ -25,3 +25,39 @@
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ db:add-missing-indices"
+    
+- name: Install apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:install {{ item }}"
+  loop: NEXTCLOUD_APPS_INSTALL
+
+- name: Enable apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:enable {{ item }}"
+  loop: NEXTCLOUD_APPS_ENABLE
+
+- name: Disable apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:disable {{ item }}"
+  loop: NEXTCLOUD_APPS_DISABLE
+
+- name: Remove apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:remove {{ item }}"
+  loop: NEXTCLOUD_APPS_REMOVE
+
+- name: Update apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:update --all"
+
+# Other things to look into:
+# Encryption: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#encryption
+# Antivirus: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#antivirus-commands-label
+# File cleanps: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#file-operations
+# Files scan: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#scan
+# Federation sync: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#federation-sync
