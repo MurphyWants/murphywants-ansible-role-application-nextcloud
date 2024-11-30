@@ -37,35 +37,35 @@
     container: nextcloud
     command: "occ config:system:set maintenance_window_start --type=integer --value={{ NEXTCLOUD_MAINTENENCE_WINDOW_START }}"
     
-- name: Install apps
+- name: Install nextcloud apps
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ app:install {{ item }}"
   loop: "{{ NEXTCLOUD_APPS_INSTALL }}"
   failed_when: false
 
-- name: Enable apps
+- name: Enable nextcloud apps
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ app:enable {{ item }}"
   loop: "{{ NEXTCLOUD_APPS_ENABLE }}"
   failed_when: false
 
-- name: Disable apps
+- name: Disable nextcloud apps
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ app:disable {{ item }}"
   loop: "{{ NEXTCLOUD_APPS_DISABLE }}"
   failed_when: false
 
-- name: Remove apps
+- name: Remove nextcloud apps
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ app:remove {{ item }}"
   loop: "{{ NEXTCLOUD_APPS_REMOVE }}"
   failed_when: false
 
-- name: Update apps
+- name: Update nextcloud apps
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ app:update --all"
@@ -81,6 +81,8 @@
     container: nextcloud
     command: "occ db:add-missing-indices"
 
+# When using the GUI, it created this file. When initializing the app using the OCC cli it did not
+# Without this file, the app doesn't know where it put its data
 - name: Create ncdata file, required for the data directory of nextcloud
   ansible.builtin.file:
     path: "{{ NEXTCLOUD_PATH }}/volumes/nextcloud-data/.ncdata"
