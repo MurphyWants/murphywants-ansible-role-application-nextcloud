@@ -7,14 +7,69 @@
     status_code: [200,302]
     validate_certs: false
   register: http_result
-  until: http_result.status == 302
+  until: http_result.status == 302 or http_result.status == 200
   retries: 720 # 1 hour
   delay: 5 # seconds
+
+- name: Install the app
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ maintenance:install --database pgsql --database-name {{ NEXTCLOUD_POSTGRES_ENV_POSTGRES_DB }} --database-host nextcloud_postgres --database-port 5432 --database-user {{ NEXTCLOUD_POSTGRES_ENV_POSTGRES_USER }} --database-pass '{{ NEXTCLOUD_POSTGRES_ENV_POSTGRES_PASSWORD }}' --admin-user '{{ NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_USER }}' --admin-pass '{{ NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_PASSWORD }}'"
+  failed_when: false
+
+- name: Configure the trusted domain
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ config:system:set trusted_domains 1 --value '{{ NEXTCLOUD_FQDN }}'"
+
+- name: Configure client connections (overwrite.cli.url)
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ config:system:set overwrite.cli.url --value https://{{ NEXTCLOUD_FQDN }}"
+
+- name: Configure client connections (overwriteprotocol)
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ config:system:set overwriteprotocol --value 'https'"
 
 - name: Set nextcloud maintenance window
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ config:system:set maintenance_window_start --type=integer --value={{ NEXTCLOUD_MAINTENENCE_WINDOW_START }}"
+    
+- name: Install apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:install {{ item }}"
+  loop: "{{ NEXTCLOUD_APPS_INSTALL }}"
+  failed_when: false
+
+- name: Enable apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:enable {{ item }}"
+  loop: "{{ NEXTCLOUD_APPS_ENABLE }}"
+  failed_when: false
+
+- name: Disable apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:disable {{ item }}"
+  loop: "{{ NEXTCLOUD_APPS_DISABLE }}"
+  failed_when: false
+
+- name: Remove apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:remove {{ item }}"
+  loop: "{{ NEXTCLOUD_APPS_REMOVE }}"
+  failed_when: false
+
+- name: Update apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:update --all"
+  failed_when: false
 
 - name: Mimetype migrations
   community.docker.docker_container_exec: 
@@ -25,35 +80,12 @@
   community.docker.docker_container_exec: 
     container: nextcloud
     command: "occ db:add-missing-indices"
-    
-- name: Install apps
-  community.docker.docker_container_exec: 
-    container: nextcloud
-    command: "occ app:install {{ item }}"
-  loop: NEXTCLOUD_APPS_INSTALL
 
-- name: Enable apps
-  community.docker.docker_container_exec: 
-    container: nextcloud
-    command: "occ app:enable {{ item }}"
-  loop: NEXTCLOUD_APPS_ENABLE
-
-- name: Disable apps
-  community.docker.docker_container_exec: 
-    container: nextcloud
-    command: "occ app:disable {{ item }}"
-  loop: NEXTCLOUD_APPS_DISABLE
-
-- name: Remove apps
-  community.docker.docker_container_exec: 
-    container: nextcloud
-    command: "occ app:remove {{ item }}"
-  loop: NEXTCLOUD_APPS_REMOVE
-
-- name: Update apps
-  community.docker.docker_container_exec: 
-    container: nextcloud
-    command: "occ app:update --all"
+- name: Create ncdata file, required for the data directory of nextcloud
+  ansible.builtin.file:
+    path: "{{ NEXTCLOUD_PATH }}/volumes/nextcloud-data/.ncdata"
+    state: touch
+    mode: 444
 
 # Other things to look into:
 # Encryption: https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html#encryption
