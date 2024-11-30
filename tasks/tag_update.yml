@@ -1,2 +1,28 @@
 ---
-# TODO
+# Stop all running containers
+- name: Stop apps
+  ansible.builtin.import_tasks:
+    file: tag_stop.yml
+
+# Start all running containers, will pull down new containers on start
+- name: Start apps
+  ansible.builtin.import_tasks:
+    file: tag_start.yml
+
+- name: Wait for nextcloud to start
+  ansible.builtin.uri:
+    url: "https://{{ NEXTCLOUD_FQDN }}"
+    method: GET
+    follow_redirects: none
+    status_code: [200,302]
+    validate_certs: false
+  register: http_result
+  until: http_result.status == 302 or http_result.status == 200
+  retries: 720 # 1 hour
+  delay: 5 # seconds
+
+- name: Update nextcloud apps
+  community.docker.docker_container_exec: 
+    container: nextcloud
+    command: "occ app:update --all"
+  failed_when: false

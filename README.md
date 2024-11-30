@@ -79,7 +79,7 @@ Setup/Baseline | Setup the application and apply the configuration baseline
 Start | Start required services
 Stop | Stop required services
 Backup | (TODO) Run the backup for the component or application or OS
-Update | (TODO) Update the component applications
+Update | Will restart the apps, pull new containers, update nextcloud apps
 Remove | (TODO) Remove configurations and applications
 Purge | (TODO) Remove all configurations and applications relating to the app/component
 
