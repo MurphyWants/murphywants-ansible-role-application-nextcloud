@@ -15,6 +15,7 @@
     vars:
       DEHYDRATED_DOMAINS_LIST:
         - "{{ NEXTCLOUD_FQDN }}"
+        - "{{ NEXTCLOUD_APP_WHITEBOARD_FQDN }}"
 
   - name: Open nginx port in UFW
     community.general.ufw:
