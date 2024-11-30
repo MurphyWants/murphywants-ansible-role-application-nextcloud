@@ -12,6 +12,8 @@ NEXTCLOUD_FQDN: nextcloud.local
 NEXTCLOUD_POSTGRES_ENV_POSTGRES_PASSWORD: "ChangeThisPassword" # https://hub.docker.com/_/postgres Mandatory env var POSTGRES_PASSWORD
 NEXTCLOUD_POSTGRES_ENV_POSTGRES_USER: "postgresUser"
 NEXTCLOUD_POSTGRES_ENV_POSTGRES_DB: "postgresDatabase"
+NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_USER: "nextcloudAdmin"
+NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_PASSWORD: "ChangeThisPassword"
 NEXTCLOUD_SSL_CERT_PATH: undefined
 NEXTCLOUD_SSL_KEY_PATH: undefined
 NEXTCLOUD_NETWORK_CIDR: "10.254.0.1/24"
@@ -34,15 +36,11 @@ NEXTCLOUD_APPS_INSTALL:
   - spreed
   - bookmarks
   - tasks
-  - integration_github
   - context_chat
   - external
-  - riotchat
-  - google_synchronization
   - drawio
   - memegen
   - sketch_picker
-  - files_antivirus
 NEXTCLOUD_APPS_ENABLE: 
   - whiteboard
   - assistant
@@ -54,14 +52,15 @@ NEXTCLOUD_APPS_ENABLE:
   - spreed
   - bookmarks
   - tasks
-  - integration_github
   - context_chat
   - external
-  - riotchat
-  - google_synchronization
   - drawio
   - memegen
   - sketch_picker
-  - files_antivirus
 NEXTCLOUD_APPS_DISABLE: []
 NEXTCLOUD_APPS_REMOVE: []
+NEXTCLOUD_APP_WHITEBOARD_JWT_SECRET_KEY: "ChangeThisJWTSecret"
+NEXTCLOUD_APP_WHITEBOARD_FQDN: nextcloud-whiteboard.local
+NEXTCLOUD_APP_WHITEBOARD_PORT: 8099
+NEXTCLOUD_APP_WHITEBOARD_SSL_CERT_PATH: undefined
+NEXTCLOUD_APP_WHITEBOARD_SSL_KEY_PATH: undefined
