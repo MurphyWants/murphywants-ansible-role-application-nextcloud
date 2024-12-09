@@ -5,7 +5,7 @@
     register: nextcloud_stat_docker_compose_file
 
   - name: Docker Compose Stop Running Apps
-    community.docker.docker_compose:
+    community.docker.docker_compose_v2:
       project_src: "{{ NEXTCLOUD_PATH }}/docs"
       files: "docker-compose.yml"
       project_name: nextcloud

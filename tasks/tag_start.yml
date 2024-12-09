@@ -5,11 +5,11 @@
     register: nextcloud_stat_docker_compose_file
 
   - name: Docker Compose Start Apps
-    community.docker.docker_compose:
+    community.docker.docker_compose_v2:
       project_src: "{{ NEXTCLOUD_PATH }}/docs"
       files: "docker-compose.yml"
       state: present
-      pull: true
+      pull: always
       project_name: nextcloud
     when: nextcloud_stat_docker_compose_file.stat.exists
 
