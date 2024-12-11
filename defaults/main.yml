@@ -16,7 +16,6 @@ NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_USER: "nextcloudAdmin"
 NEXTCLOUD_DEFAULT_ADMIN_ACCOUNT_PASSWORD: "ChangeThisPassword"
 NEXTCLOUD_SSL_CERT_PATH: undefined
 NEXTCLOUD_SSL_KEY_PATH: undefined
-NEXTCLOUD_NETWORK_CIDR: "10.254.0.1/24"
 # Probably change this and use an ansible vault
 # https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html
 NEXTCLOUD_MAINTENENCE_WINDOW_START: '1'
