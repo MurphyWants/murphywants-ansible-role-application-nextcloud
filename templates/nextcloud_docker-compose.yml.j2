@@ -53,8 +53,13 @@ services:
         ports:
             - '127.0.0.1:{{ NEXTCLOUD_APP_WHITEBOARD_PORT }}:3002/tcp'
         environment:
-            - NEXTCLOUD_URL="https://{{ NEXTCLOUD_FQDN }}"
-            - JWT_SECRET_KEY="{{ NEXTCLOUD_APP_WHITEBOARD_JWT_SECRET_KEY }}"
+            - NEXTCLOUD_URL=https://{{ NEXTCLOUD_FQDN }}
+            - JWT_SECRET_KEY={{ NEXTCLOUD_APP_WHITEBOARD_JWT_SECRET_KEY }}
+            - STORAGE_STRATEGY=lru
+        networks:
+            net_nextcloud:
+                aliases:
+                    - nextcloud_whiteboard
 
 networks:
     net_nextcloud:
