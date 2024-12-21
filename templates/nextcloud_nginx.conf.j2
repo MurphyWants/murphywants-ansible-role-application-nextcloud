@@ -32,6 +32,8 @@ server {
     access_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.access.log;
     error_log /var/log/nginx/nextcloud.443.{{ NEXTCLOUD_FQDN }}.error.log;
   
+    client_max_body_size {{ NEXTCLOUD_NGINX_MAX_FILE_SIZE }};
+
     location / {
       proxy_pass "http://localhost:{{ NEXTCLOUD_HTTPS_PORT }}";
       proxy_set_header Host $http_host;
