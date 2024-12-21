@@ -75,7 +75,8 @@ server {
     ssl_certificate {{ NEXTCLOUD_APP_WHITEBOARD_SSL_CERT_PATH }};
     ssl_certificate_key {{ NEXTCLOUD_APP_WHITEBOARD_SSL_KEY_PATH }};
     
-  
+    client_max_body_size {{ NEXTCLOUD_NGINX_MAX_FILE_SIZE }};
+
     access_log /var/log/nginx/nextcloud-whiteboard.443.{{ NEXTCLOUD_APP_WHITEBOARD_FQDN }}.access.log;
     error_log /var/log/nginx/nextcloud-whiteboard.443.{{ NEXTCLOUD_APP_WHITEBOARD_FQDN }}.error.log;
   
