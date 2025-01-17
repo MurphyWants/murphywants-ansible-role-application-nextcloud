@@ -48,6 +48,7 @@ services:
     nextcloud_whiteboard:
         container_name: nextcloud_whiteboard
         image: ghcr.io/nextcloud-releases/whiteboard:release
+        restart: unless-stopped
         expose: 
             - 3002
         ports:
